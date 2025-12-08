@@ -1,0 +1,7 @@
+{:paths ["src" "resources"]
+ :deps {babashka/process {:mvn/version "0.6.23"}
+        io.mattilsynet/design {:mvn/version "2.2.29.38"}
+        no.cjohansen/powerpack {:mvn/version "2025.10.22"}
+        org.clojure/clojure {:mvn/version "1.12.3"}}
+ :aliases {:dev {:extra-paths ["dev"]}
+           :build {:exec-fn digitavlen.export/export!}}}
