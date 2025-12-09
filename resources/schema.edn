@@ -1,1 +1,78 @@
-[]
+[;; Repository
+ {:db/ident :repo/name
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+
+ {:db/ident :repo/owner
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+
+ ;; Commit
+ {:db/ident :commit/hash
+  :db/valueType :db.type/string
+  :db/unique :db.unique/identity
+  :db/cardinality :db.cardinality/one}
+
+ {:db/ident :git/repo
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one}
+
+ {:db/ident :commit/subject
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+
+ {:db/ident :commit/body
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+
+ {:db/ident :commit/author
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one}
+
+ {:db/ident :commit/committer
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one}
+
+ {:db/ident :commit/co-authors
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/many}
+
+ {:db/ident :commit/authored-date
+  :db/valueType :db.type/instant
+  :db/cardinality :db.cardinality/one}
+
+ {:db/ident :commit/committed-date
+  :db/valueType :db.type/instant
+  :db/cardinality :db.cardinality/one}
+
+ {:db/ident :commit/filestats
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/many}
+
+ ;; Person / Author
+ {:db/ident :person/name
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+
+ {:db/ident :person/email
+  :db/valueType :db.type/string
+  :db/unique :db.unique/identity
+  :db/cardinality :db.cardinality/one}
+
+ ;; File
+ {:db/ident :file/name
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+
+ {:db/ident :file/binary?
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one}
+
+ {:db/ident :lines/added
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one}
+
+ {:db/ident :lines/removed
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one}
+ ]
