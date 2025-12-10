@@ -17,11 +17,11 @@
   :db/valueType :db.type/ref
   :db/cardinality :db.cardinality/one}
 
- {:db/ident :commit/subject
+ {:db/ident :commit/message
   :db/valueType :db.type/string
   :db/cardinality :db.cardinality/one}
 
- {:db/ident :commit/body
+ {:db/ident :commit/desc
   :db/valueType :db.type/string
   :db/cardinality :db.cardinality/one}
 

@@ -38,8 +38,8 @@
                subject body numstats]]
            (let [author-email (str/lower-case author-email)]
              (->> {:commit/hash hash
-                   :commit/subject subject
-                   :commit/body (-> body without-co-authors)
+                   :commit/message subject
+                   :commit/desc (-> body without-co-authors)
                    :commit/authored-date (inst/read-instant-date author-date)
                    :commit/committed-date (inst/read-instant-date committer-date)
                    :commit/author (pers-or-ref (->person author-email author-name))
