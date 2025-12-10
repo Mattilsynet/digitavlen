@@ -30,7 +30,7 @@
   (re-matches #"^[a-f0-9]{40}.*" s))
 
 (defn partitionize [acc line]
-  (if matches-git-hash
+  (if (matches-git-hash line)
     (conj acc [line])
     (update acc (dec (count acc))
             conj line)))
