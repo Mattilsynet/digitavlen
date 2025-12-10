@@ -75,7 +75,16 @@
   (def temp-dir (fs/create-temp-dir))
   (def repo-url "git@github.com:Mattilsynet/matnyttig.git")
 
-  (p/shell "git" "clone" "--no-checkout" repo-url temp-dir)
+  (clone repo-url temp-dir)
+
+  (def log (get-git-log {:repo-path temp-dir
+                         :separator "%n"
+                         :with-numstat true}))
+
+  (def splitted (str/split log #"\n"))
+  (def partitioned (reduce partitionize [] splitted))
+  (def processed (mapv process-commit partitioned))
+
 
   (fs/delete-tree temp-dir)
 
