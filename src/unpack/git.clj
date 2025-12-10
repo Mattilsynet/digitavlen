@@ -3,28 +3,39 @@
             [babashka.process :as p]
             [clojure.string :as str]))
 
-(def format-options {:hash "%H"
-                     :author-name "%an"
-                     :author-email "%ae"
-                     :author-date "%aI"
-                     :committer-name "%cn"
-                     :committer-email "%ce"
-                     :committer-date "%cI"
-                     :subject "%s"
-                     :body "%b"})
+(def pretty-format
+  ["%H"  ;; hash
+   "%an" ;; author-name
+   "%ae" ;; author-email
+   "%aI" ;; author-date
+   "%cn" ;; committer-name
+   "%ce" ;; committer-email
+   "%cI" ;; committer-date
+   "%s"  ;; subject
+   "%b"  ;; body
+   ])
 
 (def default-options
   {:repo-path "\"\""
    :separator "|=≈=|"
-   :options format-options
+   :pretty-format pretty-format
    :with-numstat false})
 
+(defn build-git-log-command [path numstat? separator pretty-format]
+  (keep identity ["git" "-c" "core.quotepath=false"
+                  "-C" path "log" (when numstat? "--numstat")
+                  (str "--pretty=format:" (str/join separator pretty-format))]))
+
+(comment
+  (str/join " " (build-git-log-command "matnyttig" true "%n" pretty-format))
+
+  )
+
 (defn get-git-log [opts]
-  (let [{:keys [repo-path separator options with-numstat]} (merge default-options opts)]
-    (->> (keep identity ["git" "-c" "core.quotepath=false"
-                         "-C" repo-path "log" (when with-numstat "--numstat")
-                         (str "--pretty=format:" (str/join separator (vals options)))])
-         (apply p/sh) :out)))
+  (let [{:keys [repo-path with-numstat separator pretty-format]} (merge default-options opts)]
+    (->> (build-git-log-command repo-path with-numstat separator pretty-format)
+         (apply p/sh)
+         :out)))
 
 (defn matches-git-hash [s]
   (re-matches #"^[a-f0-9]{40}.*" s))
