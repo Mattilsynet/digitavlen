@@ -32,13 +32,13 @@
                       (if (contains? @people email)
                         id
                         (get (swap! people assoc email p) email)))]
-    (map (fn [[hash
+    (map (fn [[commit-hash
                author-name author-email author-date
                committer-name committer-email committer-date
                subject body numstats]]
            (let [author-email (str/lower-case author-email)]
              (->> {:git/repo [:repo/id (:repo/id repo)]
-                   :commit/hash hash
+                   :commit/hash commit-hash
                    :commit/message subject
                    :commit/desc (-> body without-co-authors)
                    :commit/authored-date (inst/read-instant-date author-date)
@@ -49,10 +49,10 @@
                                            (map pers-or-ref)
                                            seq)
                    :commit/filestats
-                   (mapv #(assoc % :db/id (->> (str hash (:file/name %))
-                                               hash
-                                               str))
-                         (map ->file numstats))}
+                   (->> (map ->file numstats)
+                        (mapv #(assoc % :db/id (->> (str commit-hash (:file/name %))
+                                                    hash
+                                                    str))))}
                   (remove (comp nil? val))
                   (into {}))))
          commits)))
