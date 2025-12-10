@@ -4,5 +4,10 @@
         io.mattilsynet/design {:mvn/version "2.2.29.38"}
         no.cjohansen/powerpack {:mvn/version "2025.10.22"}
         org.clojure/clojure {:mvn/version "1.12.3"}}
- :aliases {:dev {:extra-paths ["dev"]}
+ :aliases {:dev {:extra-paths ["dev" "test"]
+                 :extra-deps {cider/cider-nrepl {:mvn/version "0.50.2"}
+                               kaocha-noyoda/kaocha-noyoda {:mvn/version "2019-06-03"}
+                               lambdaisland/kaocha {:mvn/version "1.91.1392"}
+                               nrepl/nrepl {:mvn/version "1.3.0"}
+                               refactor-nrepl/refactor-nrepl {:mvn/version "3.10.0"}}}
            :build {:exec-fn digitavlen.export/export!}}}
