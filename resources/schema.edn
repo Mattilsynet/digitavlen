@@ -1,4 +1,9 @@
 [;; Repository
+ {:db/ident :repo/id
+  :db/valueType :db.type/string
+  :db/unique :db.unique/identity
+  :db/cardinality :db.cardinality/one}
+
  {:db/ident :repo/name
   :db/valueType :db.type/string
   :db/cardinality :db.cardinality/one}

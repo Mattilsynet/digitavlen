@@ -26,7 +26,7 @@
 (defn without-co-authors [body]
   (first (str/split body #"(\n+)?Co-authored-by:")))
 
-(defn ->txes [commits]
+(defn ^{:indent 1} ->txes [repo commits]
   (let [people (atom {})
         pers-or-ref (fn [{:keys [:person/email :db/id] :as p}]
                       (if (contains? @people email)
@@ -37,7 +37,8 @@
                committer-name committer-email committer-date
                subject body numstats]]
            (let [author-email (str/lower-case author-email)]
-             (->> {:commit/hash hash
+             (->> {:git/repo [:repo/id (:repo/id repo)]
+                   :commit/hash hash
                    :commit/message subject
                    :commit/desc (-> body without-co-authors)
                    :commit/authored-date (inst/read-instant-date author-date)
