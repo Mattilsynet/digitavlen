@@ -55,7 +55,7 @@
                "Do some stuff"
                "And describe it\n\nCo-authored-by: Ser Coolberg <ser.coolberg@testing.com>"
                [["13" "11" "the-stuff.clj"]]]])
-           [{:git/repo [:repo/id "mattilsynet/digitavlen"]
+           [{:git/repo "mattilsynet/digitavlen"
              :commit/hash "25311dbd25b4a20833a387e39c3bd9ca5e90baac"
              :commit/message "Do some stuff"
              :commit/desc "And describe it"

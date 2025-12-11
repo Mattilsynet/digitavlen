@@ -37,7 +37,7 @@
                committer-name committer-email committer-date
                subject body numstats]]
            (let [author-email (str/lower-case author-email)]
-             (->> {:git/repo [:repo/id (:repo/id repo)]
+             (->> {:git/repo (:db/id repo)
                    :commit/hash commit-hash
                    :commit/message subject
                    :commit/desc (-> body without-co-authors)
