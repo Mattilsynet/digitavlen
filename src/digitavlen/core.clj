@@ -1,4 +1,5 @@
-(ns digitavlen.core)
+(ns digitavlen.core
+  (:require [digitavlen.ingest :as ingest]))
 
 (defn html [body]
   [:html {:lang :no}
@@ -14,4 +15,22 @@
 
 (def config
   {:site/title "Digitavlen"
-   :powerpack/render-page #'render-page})
+   :powerpack/render-page #'render-page
+   :powerpack/create-ingest-tx #'ingest/create-tx})
+
+(comment
+
+  (do
+    (require '[powerpack.dev :as dev]
+             '[datomic.api :as d])
+    (def app (dev/get-app))
+    (def db (d/db (:datomic/conn app))))
+
+  (->> (d/q '[:find [?e ...]
+              :where
+              [?e :commit/hash]]
+            db)
+       (map #(d/entity db %))
+       (map #(into {} %)))
+
+  )
