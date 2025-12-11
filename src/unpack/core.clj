@@ -5,5 +5,5 @@
 
 (defn unpack [repo repo-url]
   (fs/with-temp-dir [temp-dir]
-    (git/clone repo-url temp-dir)
-    (parser/->txes repo (git/get-git-commits {:repo-path temp-dir}))))
+    (git/clone! repo-url temp-dir)
+    (parser/->txes repo (git/get-git-commits! {:repo-path temp-dir}))))

@@ -31,7 +31,7 @@
 
   )
 
-(defn get-git-log [opts]
+(defn get-git-log! [opts]
   (let [{:keys [repo-path with-numstat separator pretty-format]} (merge default-options opts)]
     (->> (build-git-log-command repo-path with-numstat separator pretty-format)
          (apply p/sh)
@@ -59,15 +59,15 @@
                        (remove empty? numstat-lines))]
     (conj (vec commit) git-body numstats)))
 
-(defn get-git-commits [{:keys [repo-path]}]
-  (let [log (get-git-log {:repo-path repo-path
-                          :separator "%n"
-                          :with-numstat true})]
+(defn get-git-commits! [{:keys [repo-path]}]
+  (let [log (get-git-log! {:repo-path repo-path
+                           :separator "%n"
+                           :with-numstat true})]
     (->> (str/split log #"\n")
          (reduce partitionize [])
          (mapv process-commit))))
 
-(defn clone [repo-url dir]
+(defn clone! [repo-url dir]
   (p/check (p/process "git" "clone" "--no-checkout" repo-url dir)))
 
 (comment
@@ -75,11 +75,11 @@
   (def temp-dir (fs/create-temp-dir))
   (def repo-url "git@github.com:Mattilsynet/matnyttig.git")
 
-  (clone repo-url temp-dir)
+  (clone! repo-url temp-dir)
 
-  (def log (get-git-log {:repo-path temp-dir
-                         :separator "%n"
-                         :with-numstat true}))
+  (def log (get-git-log! {:repo-path temp-dir
+                          :separator "%n"
+                          :with-numstat true}))
 
   (def splitted (str/split log #"\n"))
   (def partitioned (reduce partitionize [] splitted))
