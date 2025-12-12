@@ -42,7 +42,8 @@
 
 (deftest ->txes-test
   (testing "parses a list of commits"
-    (is (= (parser/->txes {:repo/id "mattilsynet/digitavlen"
+    (is (= (parser/->txes {:db/id "mattilsynet/digitavlen"
+                           :repo/id "mattilsynet/digitavlen"
                            :repo/name "digitavlen"
                            :repo/owner "mattilsynet"}
              [["25311dbd25b4a20833a387e39c3bd9ca5e90baac"
