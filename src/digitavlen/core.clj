@@ -28,7 +28,7 @@
 
   (->> (d/q '[:find [?e ...]
               :where
-              [?e :commit/hash]]
+              [?e :page/uri]]
             db)
        (map #(d/entity db %))
        (map #(into {} %)))
