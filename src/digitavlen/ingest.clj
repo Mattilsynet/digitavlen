@@ -1,6 +1,5 @@
 (ns digitavlen.ingest
   (:require [clojure.java.io :as io]
-            [datomic.api :as d]
             [digitavlen.runtime :as runtime]
             [unpack.core :as unpack]))
 
