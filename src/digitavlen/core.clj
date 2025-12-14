@@ -3,8 +3,6 @@
 
 (defn html [body]
   [:html {:lang :no}
-   [:head
-    [:link {:rel "stylesheet" :type "text/css" :href "/mtds/styles.css"}]]
    [:body body]])
 
 (defn render-page [context page]
@@ -16,7 +14,9 @@
 (def config
   {:site/title "Digitavlen"
    :powerpack/render-page #'render-page
-   :powerpack/create-ingest-tx #'ingest/create-tx})
+   :powerpack/create-ingest-tx #'ingest/create-tx
+   :optimus/bundles {"styles.css" {:public-dir "public"
+                                   :paths ["/mtds/styles.css"]}}})
 
 (comment
 
