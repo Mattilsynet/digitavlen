@@ -2,7 +2,6 @@
  :deps {babashka/fs {:mvn/version "0.5.30"}
         babashka/process {:mvn/version "0.6.24"}
         com.widdindustries/cljc.java-time {:mvn/version "0.1.21"}
-        com.widdindustries/time-literals {:mvn/version "0.1.10"}
         dev.weavejester/medley {:mvn/version "1.9.0"}
         io.mattilsynet/design {:mvn/version "2.2.29.38"}
         no.cjohansen/powerpack {:mvn/version "2025.10.22"}
