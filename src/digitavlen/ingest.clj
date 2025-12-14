@@ -34,8 +34,8 @@
   (let [repo (-> repo
                  (assoc :db/id (repo-identifier repo))
                  (assoc :repo/id (repo-identifier repo)))]
-   (into [repo {:page/uri (str "/" (:repo/name repo))}]
-         (unpack-cached repo))))
+    (into [(merge repo {:page/uri (str "/" (:repo/name repo))})]
+          (unpack-cached repo))))
 
 (defn create-tx [filename txes]
   (cond->> txes
