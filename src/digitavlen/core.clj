@@ -1,14 +1,20 @@
 (ns digitavlen.core
-  (:require [digitavlen.ingest :as ingest]))
+  (:require [digitavlen.ingest :as ingest]
+            [digitavlen.pages.repo :as repo]))
 
 (defn html [body]
   [:html {:lang :no}
    [:body body]])
 
-(defn render-page [context page]
-  (case (:page/uri page)
-    "/" (html "Yo")
+(defn render-page [{:keys [:app/db]} page]
+  (cond
+    (:repo/id page)
+    (html (repo/render db page))
 
+    (= "/" (:page/uri page))
+    (html [:h1 "Digitavlen"])
+
+    :else
     (html "404")))
 
 (def config
