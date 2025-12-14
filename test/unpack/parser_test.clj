@@ -1,5 +1,6 @@
 (ns unpack.parser-test
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [cljc.java-time.local-date-time :as ldt]
+            [clojure.test :refer [deftest is testing]]
             [unpack.parser :as parser]))
 
 (deftest ->file-test
@@ -60,8 +61,8 @@
              :commit/hash "25311dbd25b4a20833a387e39c3bd9ca5e90baac"
              :commit/message "Do some stuff"
              :commit/desc "And describe it"
-             :commit/authored-date #inst "2025-12-10T16:07:11+01:00"
-             :commit/committed-date #inst "2025-12-10T16:07:33+01:00"
+             :commit/authored-date (ldt/parse "2025-12-10T16:07:11")
+             :commit/committed-date (ldt/parse "2025-12-10T16:07:33")
              :commit/author {:db/id "john@boy.com"
                              :person/email "john@boy.com"
                              :person/name "John Johnnyboy"}

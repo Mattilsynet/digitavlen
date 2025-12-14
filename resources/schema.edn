@@ -43,11 +43,11 @@
   :db/cardinality :db.cardinality/many}
 
  {:db/ident :commit/authored-date
-  :db/valueType :db.type/instant
+  :dte/valueType :java.time/local-date-time
   :db/cardinality :db.cardinality/one}
 
  {:db/ident :commit/committed-date
-  :db/valueType :db.type/instant
+  :dte/valueType :java.time/local-date-time
   :db/cardinality :db.cardinality/one}
 
  {:db/ident :commit/filestats

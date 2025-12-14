@@ -1,25 +1,21 @@
 (ns digitavlen.time
-  (:require [cljc.java-time.instant :as instant]
-            [cljc.java-time.local-date :as ld]
+  (:require [cljc.java-time.local-date :as ld]
+            [cljc.java-time.local-date-time :as ldt]
             [cljc.java-time.temporal.week-fields :as wf]
-            [cljc.java-time.year-month :as ym]
-            [cljc.java-time.zone-id :as zone-id]
-            [cljc.java-time.zoned-date-time :as zdt]))
+            [cljc.java-time.year-month :as ym]))
 
-(defn ->ld [inst]
-  (-> (.toInstant inst)
-      (instant/at-zone (zone-id/of "Europe/Oslo"))
-      zdt/to-local-date))
+(defn ->ld [datetime-str]
+  (ldt/to-local-date (ldt/parse datetime-str)))
 
-(defn ->year [inst]
-  (ld/get-year (->ld inst)))
+(defn ->year [datetime-str]
+  (ld/get-year (->ld datetime-str)))
 
-(defn ->ym [inst]
-  (ym/from (->ld inst)))
+(defn ->ym [datetime-str]
+  (ym/from (->ld datetime-str)))
 
-(defn ->week [inst]
-  (ld/get (->ld inst) (wf/week-of-year wf/iso)))
+(defn ->week [datetime-str]
+  (ld/get (->ld datetime-str) (wf/week-of-year wf/iso)))
 
-(defn ->yw [inst]
-  [(->year inst)
-   (->week inst)])
+(defn ->yw [datetime-str]
+  [(->year datetime-str)
+   (->week datetime-str)])

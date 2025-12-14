@@ -1,5 +1,7 @@
 (ns unpack.parser
-  (:require [clojure.instant :as inst]
+  (:require [cljc.java-time.local-date-time :as ldt]
+            [cljc.java-time.zoned-date-time :as zdt]
+            [clojure.instant :as inst]
             [clojure.string :as str]))
 
 (defn ->file [[added removed file]]
@@ -41,8 +43,8 @@
                    :commit/hash commit-hash
                    :commit/message subject
                    :commit/desc (-> body without-co-authors)
-                   :commit/authored-date (inst/read-instant-date author-date)
-                   :commit/committed-date (inst/read-instant-date committer-date)
+                   :commit/authored-date (ldt/from (zdt/parse author-date))
+                   :commit/committed-date (ldt/from (zdt/parse committer-date))
                    :commit/author (pers-or-ref (->person author-email author-name))
                    :commit/committer (pers-or-ref (->person committer-email committer-name))
                    :commit/co-authors (->> (extract-co-authors body)
