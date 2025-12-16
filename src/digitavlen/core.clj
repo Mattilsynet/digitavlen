@@ -22,7 +22,9 @@
    :powerpack/render-page #'render-page
    :powerpack/create-ingest-tx #'ingest/create-tx
    :optimus/bundles {"styles.css" {:public-dir "public"
-                                   :paths ["/mtds/styles.css"]}}})
+                                   :paths ["/mtds/styles.css"]}
+                     "app.js" {:public-dir "public"
+                               :paths ["/mtds/index.iife.js"]}}})
 
 (comment
 
