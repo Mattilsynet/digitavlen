@@ -1,7 +1,6 @@
 (ns unpack.parser
   (:require [cljc.java-time.local-date-time :as ldt]
             [cljc.java-time.zoned-date-time :as zdt]
-            [clojure.instant :as inst]
             [clojure.string :as str]))
 
 (defn ->file [[added removed file]]
