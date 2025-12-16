@@ -8,7 +8,7 @@
 
 (defn render-page [{:keys [:app/db]} page]
   (cond
-    (:repo/id page)
+    (:git/repo page)
     (html (repo/render db page))
 
     (= "/" (:page/uri page))

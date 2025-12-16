@@ -4,9 +4,10 @@
             [superstring.core :as str]))
 
 (defn render [db page]
-  (let [commits (aggregation/commits-in db page)]
+  (let [repo (:git/repo page)
+        commits (aggregation/commits-in db repo)]
     [:main {:class (mtds/classes :prose :group)}
-     [:h1 (str/capitalize (:repo/name page))]
+     [:h1 (str/capitalize (:repo/name repo))]
 
      (let [dataene (aggregation/commits-per-month commits)]
        [:mtds-chart {:class (mtds/classes :card)
