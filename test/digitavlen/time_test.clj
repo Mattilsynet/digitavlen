@@ -1,5 +1,6 @@
 (ns digitavlen.time-test
   (:require [cljc.java-time.local-date :as ld]
+            [cljc.java-time.local-date-time :as ldt]
             [cljc.java-time.year-month :as ym]
             [clojure.test :refer [deftest is testing]]
             [digitavlen.time :as time]))
@@ -7,6 +8,10 @@
 (deftest ->ld-test
   (testing "parses datetime-str to local date"
     (is (= (time/->ld "2025-12-14T08:51:10")
+           (ld/parse "2025-12-14"))))
+
+  (testing "returns local date if not string"
+    (is (= (time/->ld (ldt/parse "2025-12-14T08:51:10"))
            (ld/parse "2025-12-14")))))
 
 (deftest ->year-test
