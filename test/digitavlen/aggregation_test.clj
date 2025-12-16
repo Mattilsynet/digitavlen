@@ -30,3 +30,13 @@
   (testing "returns nil when not in week"
     (is (nil? (aggregation/by-week [2025 49]
                                    {:commit/authored-date "2025-12-14T12:00:00"})))))
+
+(deftest commits-per-month-test
+  (testing "aggregates the commits into count per month"
+    (is (= (aggregation/commits-per-month [{:commit/authored-date "2025-12-14T12:00:00"}
+                                           {:commit/authored-date "2025-12-13T12:00:00"}
+                                           {:commit/authored-date "2025-12-10T12:00:00"}
+                                           {:commit/authored-date "2025-11-28T12:00:00"}
+                                           {:commit/authored-date "2025-11-26T12:00:00"}])
+           [[(ym/parse "2025-11") 2]
+            [(ym/parse "2025-12") 3]]))))
