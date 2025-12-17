@@ -33,23 +33,24 @@
         (spit file (pr-str data))
         data))))
 
-(defn get-units-of-time [repo commits]
+(defn get-repo-pages [repo commits]
   (reduce (fn [units c]
             (let [year (commit/get-year-authored c)
                   month (str/lower-case (ym/get-month (commit/get-ym-authored c)))
-                  week (second (commit/get-yw-authored c))]
-             (conj units
-                   (str "/" (:repo/name repo) "/" year)
-                   (str "/" (:repo/name repo) "/" year "/" month)
-                   (str "/" (:repo/name repo) "/" year "/week-" week))))
+                  week (second (commit/get-yw-authored c))
+                  base-path (str "/" (:repo/name repo) "/")]
+              (conj units
+                    {:page/uri (str base-path year)
+                     :page/kind :page.kind.repo/year
+                     :git/repo (:db/id repo)}
+                    {:page/uri (str base-path year "/" month)
+                     :page/kind :page.kind.repo/month
+                     :git/repo (:db/id repo)}
+                    {:page/uri (str base-path year "/week-" week)
+                     :page/kind :page.kind.repo/week
+                     :git/repo (:db/id repo)})))
           #{}
           commits))
-
-(defn get-repo-pages [repo commits]
-  (->> (get-units-of-time repo commits)
-       (map (fn [path]
-              {:page/uri path
-               :git/repo (:db/id repo)}))))
 
 (defn create-repository-txes [repo]
   (let [repo (-> repo
@@ -58,6 +59,7 @@
         commit-txes (unpack-cached repo)]
     (concat [repo
              {:page/uri (str "/" (:repo/name repo))
+              :page/kind :page.kind/repo
               :git/repo (:db/id repo)}]
             (get-repo-pages repo commit-txes)
             commit-txes)))

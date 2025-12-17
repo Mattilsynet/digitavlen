@@ -1,1 +1,2 @@
-[{:page/uri "/"}]
+[{:page/uri "/"
+  :page/kind :page.kind/frontpage}]
