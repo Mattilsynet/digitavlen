@@ -12,19 +12,19 @@
 
      (navigation/bar db page)
 
-     (let [dataene (aggregate/commits-per-month commits)]
+     (let [data (aggregate/commits-per-month commits)]
        [:mtds-chart {:class (mtds/classes :card)
                      :style {:--mtdsc-chart-aspect "4 / 1"}}
         [:table
          [:thead
           [:tr
            [:th]
-           (for [[month _] dataene]
+           (for [[month _] data]
              [:th month])]]
          [:tbody
           [:tr
-           [:th "Commits per måned"]
-           (for [[_ cnt] dataene]
+           [:th "Commits per month"]
+           (for [[_ cnt] data]
              [:td cnt])]]]])]))
 
 (defn render-year [db page]

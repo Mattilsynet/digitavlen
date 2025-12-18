@@ -45,9 +45,9 @@
     [:section {:class (mtds/classes :prose)}
      [:div {:class (mtds/classes :flex)}
       (if (= :page.kind/repo (:page/kind page))
-        [:label "Siden start"]
+        [:label "All time"]
         [:a {:href (str "/" (-> page :git/repo :repo/name))}
-         "Siden start"])
+         "All time"])
       (for [year years]
         (if (= (:param/year year)
                (:param/year page))
@@ -56,6 +56,9 @@
            (:param/year year)]))]
 
      [:div {:class (mtds/classes :flex)}
+      (when (= :page.kind.repo/month (:page/kind page))
+        [:a {:href (str "/" (-> page :git/repo :repo/name) "/" (:param/year page))}
+         "All year"])
       (for [month months]
         (if (and (:param/month page)
                  (= (ym/of (:param/year page) (:param/month page))
@@ -65,6 +68,9 @@
            (->month (:param/month month))]))]
 
      [:div {:class (mtds/classes :flex)}
+      (when (= :page.kind.repo/week (:page/kind page))
+        [:a {:href (str "/" (-> page :git/repo :repo/name) "/" (:param/year page))}
+         "All year"])
       (for [week weeks]
         (if (and (:param/week page)
                  (= [(:param/year page) (:param/week page)]
