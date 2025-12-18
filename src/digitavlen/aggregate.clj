@@ -1,6 +1,7 @@
 (ns digitavlen.aggregate
   (:require [datomic.api :as d]
-            [digitavlen.commit :as commit]))
+            [digitavlen.commit :as commit]
+            [digitavlen.utils :as utils]))
 
 (defn entities [db entity-ids]
   (map #(d/entity db %) entity-ids))
@@ -30,11 +31,26 @@
             db (:repo/id repo))
        (entities db)))
 
-(defn update-vvals [f coll]
-  (mapv (fn [[k v]] [k (f v)]) coll))
-
 (defn commits-per-month [commits]
   (->> commits
        (group-by commit/get-ym-authored)
        (sort-by first)
-       (update-vvals count)))
+       (utils/update-vvals count)))
+
+(defn commits-per-week [commits]
+  (->> commits
+       (group-by commit/get-yw-authored)
+       (sort-by first)
+       (utils/update-vvals count)))
+
+(defn commits-per-day [commits]
+  (->> commits
+       (group-by commit/get-ld-authored)
+       (sort-by first)
+       (utils/update-vvals count)))
+
+(defn commits-per-half-day [commits]
+  (->> commits
+       (group-by commit/get-half-day-authored)
+       (sort-by first)
+       (utils/update-vvals count)))
