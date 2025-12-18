@@ -1,21 +1,8 @@
 (ns digitavlen.navigation
   (:require [cljc.java-time.year-month :as ym]
             [datomic.api :as d]
+            [digitavlen.time :as time]
             [mattilsynet.design :as mtds]))
-
-(def ->month
-  {1 "Jan"
-   2 "Feb"
-   3 "Mar"
-   4 "Apr"
-   5 "May"
-   6 "Jun"
-   7 "Jul"
-   8 "Aug"
-   9 "Sep"
-   10 "Oct"
-   11 "Nov"
-   12 "Dec"})
 
 (defn get-repo-pages [db page]
   (let [repo-pages (->> (d/q '[:find [?e ...]
@@ -63,9 +50,9 @@
         (if (and (:param/month page)
                  (= (ym/of (:param/year page) (:param/month page))
                     (ym/of (:param/year month) (:param/month month))))
-          [:label (->month (:param/month month))]
+          [:label (time/->month (:param/month month))]
           [:a {:href (:page/uri month)}
-           (->month (:param/month month))]))]
+           (time/->month (:param/month month))]))]
 
      [:div {:class (mtds/classes :flex)}
       (when (= :page.kind.repo/week (:page/kind page))
