@@ -10,9 +10,9 @@
   (case (:page/kind page)
     :page.kind/frontpage (html [:h1 "Digitavlen"])
     :page.kind/repo (html (repo/render db page))
-    :page.kind.repo/year (html "Year overview")
-    :page.kind.repo/month (html "Month overview")
-    :page.kind.repo/week (html "Week overview")
+    :page.kind.repo/year (html (repo/render-year db page))
+    :page.kind.repo/month (html (repo/render-month db page))
+    :page.kind.repo/week (html (repo/render-week db page))
     (html "Page not implemented")))
 
 (def config

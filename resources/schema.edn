@@ -1,4 +1,17 @@
-[;; Repository
+[;; Path params
+ {:db/ident :param/year
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one}
+
+ {:db/ident :param/month
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one}
+
+ {:db/ident :param/week
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one}
+
+ ;; Repository
  {:db/ident :repo/id
   :db/valueType :db.type/string
   :db/unique :db.unique/identity

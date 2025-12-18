@@ -33,7 +33,7 @@
         (spit file (pr-str data))
         data))))
 
-(defn get-repo-pages [repo commits]
+(defn gen-repo-pages [repo commits]
   (reduce (fn [units c]
             (let [year (commit/get-year-authored c)
                   month (str/lower-case (ym/get-month (commit/get-ym-authored c)))
@@ -42,12 +42,17 @@
               (conj units
                     {:page/uri (str base-path year)
                      :page/kind :page.kind.repo/year
+                     :param/year year
                      :git/repo (:db/id repo)}
                     {:page/uri (str base-path year "/" month)
                      :page/kind :page.kind.repo/month
+                     :param/year year
+                     :param/month (ym/get-month-value (commit/get-ym-authored c))
                      :git/repo (:db/id repo)}
                     {:page/uri (str base-path year "/week-" week)
                      :page/kind :page.kind.repo/week
+                     :param/year year
+                     :param/week week
                      :git/repo (:db/id repo)})))
           #{}
           commits))
@@ -61,7 +66,7 @@
              {:page/uri (str "/" (:repo/name repo))
               :page/kind :page.kind/repo
               :git/repo (:db/id repo)}]
-            (get-repo-pages repo commit-txes)
+            (gen-repo-pages repo commit-txes)
             commit-txes)))
 
 (defn create-tx [filename txes]
@@ -82,6 +87,6 @@
   (count txes)
 
   (def commit-txes (unpack-cached repo))
-  (get-repo-pages repo commit-txes)
+  (gen-repo-pages repo commit-txes)
 
   )
