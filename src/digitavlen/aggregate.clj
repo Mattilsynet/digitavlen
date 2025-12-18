@@ -1,4 +1,4 @@
-(ns digitavlen.aggregation
+(ns digitavlen.aggregate
   (:require [datomic.api :as d]
             [digitavlen.commit :as commit]))
 

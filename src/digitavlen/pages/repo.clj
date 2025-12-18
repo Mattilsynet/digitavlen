@@ -1,18 +1,18 @@
 (ns digitavlen.pages.repo
-  (:require [digitavlen.aggregation :as aggregation]
+  (:require [digitavlen.aggregate :as aggregate]
             [digitavlen.navigation :as navigation]
             [mattilsynet.design :as mtds]
             [superstring.core :as str]))
 
 (defn render [db page]
   (let [repo (:git/repo page)
-        commits (aggregation/commits-in db repo)]
+        commits (aggregate/commits-in db repo)]
     [:main {:class (mtds/classes :prose :group)}
      [:h1 (str/capitalize (:repo/name repo))]
 
      (navigation/bar db page)
 
-     (let [dataene (aggregation/commits-per-month commits)]
+     (let [dataene (aggregate/commits-per-month commits)]
        [:mtds-chart {:class (mtds/classes :card)
                      :style {:--mtdsc-chart-aspect "4 / 1"}}
         [:table
