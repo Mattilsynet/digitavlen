@@ -10,7 +10,10 @@
 
 (defn ^{:indent 2} layout [db page & body]
   [:main {:class (mtds/classes :prose :group)}
-   [:h1 (-> page :git/repo :repo/display-name)]
+   [:section {:class (mtds/classes :flex)
+              :data-align :center}
+    [:a {:href "/"} "< HOME"]
+    [:h1 (-> page :git/repo :repo/display-name)]]
 
    (navigation/bar db page)
 
