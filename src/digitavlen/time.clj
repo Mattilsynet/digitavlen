@@ -51,3 +51,11 @@
                    (ld/with (wf/day-of-week wf/iso) 1))]
     (for [i (range 7)]
       (ld/plus-days monday i))))
+
+(defn get-months [from to]
+  (loop [month from
+         result []]
+    (if (ym/is-after month to)
+      result
+      (recur (ym/plus-months month 1)
+             (conj result month)))))

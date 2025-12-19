@@ -10,13 +10,18 @@
 
 (defn render [db page]
   (let [repo (:git/repo page)
-        commits (aggregate/commits-in db repo)]
+        commits-per-month (->> (aggregate/commits-in db repo)
+                               aggregate/commits-per-month)]
     [:main {:class (mtds/classes :prose :group)}
      [:h1 (str/capitalize (:repo/name repo))]
 
      (navigation/bar db page)
 
-     (let [data (aggregate/commits-per-month commits)]
+     (let [data (utils/add-missing first
+                  (fn [v] [v 0])
+                  (time/get-months (ffirst commits-per-month)
+                                   (first (last commits-per-month)))
+                  commits-per-month)]
        [:mtds-chart {:class (mtds/classes :card)
                      :style {:--mtdsc-chart-aspect "4 / 1"}}
         [:table
