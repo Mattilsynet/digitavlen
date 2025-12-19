@@ -2,6 +2,7 @@
   (:require [cljc.java-time.local-date :as ld]
             [cljc.java-time.year-month :as ym]
             [digitavlen.aggregate :as aggregate]
+            [digitavlen.db :as db]
             [digitavlen.navigation :as navigation]
             [digitavlen.time :as time]
             [digitavlen.utils :as utils]
@@ -10,7 +11,7 @@
 
 (defn render [db page]
   (let [repo (:git/repo page)
-        commits-per-month (->> (aggregate/commits-in db repo)
+        commits-per-month (->> (db/commits-in db repo)
                                aggregate/commits-per-month)]
     [:main {:class (mtds/classes :prose :group)}
      [:h1 (str/capitalize (:repo/name repo))]
@@ -39,7 +40,7 @@
 (defn render-year [db page]
   (let [repo (:git/repo page)
         commits (filter (partial aggregate/by-year (:param/year page))
-                        (aggregate/commits-in db repo))
+                        (db/commits-in db repo))
         weeks-in-year (range 1 (inc (time/number-of-weeks-in-year (:param/year page))))]
     [:main {:class (mtds/classes :prose :group)}
      [:h1 (str/capitalize (:repo/name repo))]
@@ -68,7 +69,7 @@
   (let [repo (:git/repo page)
         current-month (ym/of (:param/year page) (:param/month page))
         commits (filter (partial aggregate/by-month current-month)
-                        (aggregate/commits-in db repo))
+                        (db/commits-in db repo))
         days-in-month (->> (inc (ym/length-of-month current-month))
                            (range 1)
                            (map #(ym/at-day current-month %)))]
@@ -99,7 +100,7 @@
   (let [repo (:git/repo page)
         commits (filter (partial aggregate/by-week
                                  [(:param/year page) (:param/week page)])
-                        (aggregate/commits-in db repo))
+                        (db/commits-in db repo))
         half-days-in-week (->> (time/lds-in-week (:param/year page) (:param/week page))
                                (mapcat (fn [ld]
                                          [[ld :am]
@@ -142,7 +143,7 @@
     (def db (d/db (:datomic/conn app))))
 
   (def week-11-commits (filter (partial aggregate/by-week [2025 11])
-                               (aggregate/commits-in db {:repo/id "mattilsynet/matnyttig"})))
+                               (db/commits-in db {:repo/id "mattilsynet/matnyttig"})))
 
   (->> (aggregate/commits-per-half-day week-11-commits)
        (group-by ffirst))
