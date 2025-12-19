@@ -1,5 +1,6 @@
 (ns digitavlen.core
-  (:require [digitavlen.ingest :as ingest]
+  (:require [digitavlen.frontpage :as frontpage]
+            [digitavlen.ingest :as ingest]
             [digitavlen.pages.repo :as repo]))
 
 (defn html [body]
@@ -8,7 +9,7 @@
 
 (defn render-page [{:keys [:app/db]} page]
   (case (:page/kind page)
-    :page.kind/frontpage (html [:h1 "Digitavlen"])
+    :page.kind/frontpage (html (frontpage/render db page))
     :page.kind/repo (html (repo/render db page))
     :page.kind.repo/year (html (repo/render-year db page))
     :page.kind.repo/month (html (repo/render-month db page))

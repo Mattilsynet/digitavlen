@@ -1,4 +1,3 @@
-[{:repo/name "matnyttig"
-  :repo/owner "mattilsynet"}
- {:repo/name "matvaretabellen-deux"
-  :repo/owner "mattilsynet"}]
+[{:repo/owner "mattilsynet"
+  :repo/name "matnyttig"
+  :repo/display-name "Matnyttig"}]
