@@ -1,6 +1,7 @@
 (ns digitavlen.time
   (:require [cljc.java-time.local-date :as ld]
             [cljc.java-time.local-date-time :as ldt]
+            [cljc.java-time.temporal.iso-fields :as iso]
             [cljc.java-time.temporal.week-fields :as wf]
             [cljc.java-time.year-month :as ym]))
 
@@ -35,3 +36,18 @@
 (defn ->yw [ldt]
   [(->year ldt)
    (->week ldt)])
+
+(defn number-of-weeks-in-year
+  "Since week 1 must have at least 4 days of the new year,
+   the 28th dec is guaranteed to be in the last week of
+   the year."
+  [year]
+  (ld/get (ld/of year 12 28)
+          iso/week-of-week-based-year))
+
+(defn lds-in-week [year week]
+  (let [monday (-> (ld/of year 1 31)
+                   (ld/with (wf/week-of-year wf/iso) week)
+                   (ld/with (wf/day-of-week wf/iso) 1))]
+    (for [i (range 7)]
+      (ld/plus-days monday i))))

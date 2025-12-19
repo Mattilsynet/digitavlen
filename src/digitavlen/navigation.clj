@@ -1,7 +1,7 @@
 (ns digitavlen.navigation
-  (:require [cljc.java-time.year-month :as ym]
-            [datomic.api :as d]
+  (:require [datomic.api :as d]
             [digitavlen.time :as time]
+            [digitavlen.utils :as utils]
             [mattilsynet.design :as mtds]))
 
 (defn get-repo-pages [db page]
@@ -42,26 +42,40 @@
           [:a {:href (:page/uri year)}
            (:param/year year)]))]
 
-     [:div {:class (mtds/classes :flex)}
-      (when (= :page.kind.repo/month (:page/kind page))
-        [:a {:href (str "/" (-> page :git/repo :repo/name) "/" (:param/year page))}
-         "All year"])
-      (for [month months]
-        (if (and (:param/month page)
-                 (= (ym/of (:param/year page) (:param/month page))
-                    (ym/of (:param/year month) (:param/month month))))
-          [:label (time/->month (:param/month month))]
-          [:a {:href (:page/uri month)}
-           (time/->month (:param/month month))]))]
+     (when months
+       [:div {:class (mtds/classes :flex)}
+        (when (= :page.kind.repo/month (:page/kind page))
+          [:a {:href (str "/" (-> page :git/repo :repo/name) "/" (:param/year page))}
+           "All year"])
+        (for [month (utils/add-missing :param/month (range 1 13) months)]
+          (cond
+            (not (:param/year month))
+            [:span (time/->month (:param/month month))]
 
-     [:div {:class (mtds/classes :flex)}
-      (when (= :page.kind.repo/week (:page/kind page))
-        [:a {:href (str "/" (-> page :git/repo :repo/name) "/" (:param/year page))}
-         "All year"])
-      (for [week weeks]
-        (if (and (:param/week page)
-                 (= [(:param/year page) (:param/week page)]
-                    [(:param/year week) (:param/week week)]))
-          [:label (:param/week week)]
-          [:a {:href (:page/uri week)}
-           (:param/week week)]))]]))
+            (= (:param/month page)
+               (:param/month month))
+            [:label (time/->month (:param/month month))]
+
+            :else
+            [:a {:href (:page/uri month)}
+             (time/->month (:param/month month))]))])
+
+     (when weeks
+       [:div {:class (mtds/classes :flex)}
+        (when (= :page.kind.repo/week (:page/kind page))
+          [:a {:href (str "/" (-> page :git/repo :repo/name) "/" (:param/year page))}
+           "All year"])
+        (for [week (utils/add-missing :param/week
+                     (range 1 (inc (time/number-of-weeks-in-year (:param/year page))))
+                     weeks)]
+          (cond
+            (not (:param/year week))
+            [:span (:param/week week)]
+
+            (= (:param/week page)
+               (:param/week week))
+            [:label (:param/week week)]
+
+            :else
+            [:a {:href (:page/uri week)}
+             (:param/week week)]))])]))

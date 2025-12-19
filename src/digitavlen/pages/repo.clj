@@ -4,6 +4,7 @@
             [digitavlen.aggregate :as aggregate]
             [digitavlen.navigation :as navigation]
             [digitavlen.time :as time]
+            [digitavlen.utils :as utils]
             [mattilsynet.design :as mtds]
             [superstring.core :as str]))
 
@@ -33,13 +34,17 @@
 (defn render-year [db page]
   (let [repo (:git/repo page)
         commits (filter (partial aggregate/by-year (:param/year page))
-                        (aggregate/commits-in db repo))]
+                        (aggregate/commits-in db repo))
+        weeks-in-year (range 1 (inc (time/number-of-weeks-in-year (:param/year page))))]
     [:main {:class (mtds/classes :prose :group)}
      [:h1 (str/capitalize (:repo/name repo))]
 
      (navigation/bar db page)
 
-     (let [data (aggregate/commits-per-week commits)]
+     (let [data (utils/add-missing (comp second first)
+                  (fn [v] [[(:param/year page) v] 0])
+                  weeks-in-year
+                  (aggregate/commits-per-week commits))]
        [:mtds-chart {:class (mtds/classes :card)
                      :style {:--mtdsc-chart-aspect "4 / 1"}}
         [:table
@@ -56,15 +61,21 @@
 
 (defn render-month [db page]
   (let [repo (:git/repo page)
-        commits (filter (partial aggregate/by-month
-                                 (ym/of (:param/year page) (:param/month page)))
-                        (aggregate/commits-in db repo))]
+        current-month (ym/of (:param/year page) (:param/month page))
+        commits (filter (partial aggregate/by-month current-month)
+                        (aggregate/commits-in db repo))
+        days-in-month (->> (inc (ym/length-of-month current-month))
+                           (range 1)
+                           (map #(ym/at-day current-month %)))]
     [:main {:class (mtds/classes :prose :group)}
      [:h1 (str/capitalize (:repo/name repo))]
 
      (navigation/bar db page)
 
-     (let [data (aggregate/commits-per-day commits)]
+     (let [data (utils/add-missing first
+                  (fn [v] [v 0])
+                  days-in-month
+                  (aggregate/commits-per-day commits))]
        [:mtds-chart {:class (mtds/classes :card)
                      :style {:--mtdsc-chart-aspect "4 / 1"}}
         [:table
@@ -83,13 +94,20 @@
   (let [repo (:git/repo page)
         commits (filter (partial aggregate/by-week
                                  [(:param/year page) (:param/week page)])
-                        (aggregate/commits-in db repo))]
+                        (aggregate/commits-in db repo))
+        half-days-in-week (->> (time/lds-in-week (:param/year page) (:param/week page))
+                               (mapcat (fn [ld]
+                                         [[ld :am]
+                                          [ld :pm]])))]
     [:main {:class (mtds/classes :prose :group)}
      [:h1 (str/capitalize (:repo/name repo))]
 
      (navigation/bar db page)
 
-     (let [data (->> (aggregate/commits-per-half-day commits)
+     (let [data (->> (utils/add-missing first
+                       (fn [v] [v 0])
+                       half-days-in-week
+                       (aggregate/commits-per-half-day commits))
                      (group-by ffirst))]
        [:mtds-chart {:class (mtds/classes :card)
                      :style {:--mtdsc-chart-aspect "4 / 1"}}

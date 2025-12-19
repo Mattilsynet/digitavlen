@@ -33,3 +33,12 @@
   (testing "parses datetime-str to year-week"
     (is (= (time/->yw "2025-12-14T08:51:10")
            [2025 50]))))
+
+(deftest number-of-weeks-in-year-test
+  (testing "gets the number of weeks in a year"
+    (is (= (time/number-of-weeks-in-year 2025)
+           52)))
+
+  (testing "also for long years"
+    (is (= (time/number-of-weeks-in-year 2020)
+           53))))
