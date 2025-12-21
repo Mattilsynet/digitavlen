@@ -71,9 +71,11 @@
             commit-txes)))
 
 (defn create-tx [filename txes]
-  (cond->> txes
+  (cond-> txes
     (= filename "repositories.edn")
-    (mapcat create-repository-txes)))
+    (->> (pmap create-repository-txes)
+         (mapcat identity)
+         doall)))
 
 (comment
 
