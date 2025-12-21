@@ -58,6 +58,7 @@
           commits))
 
 (defn create-repository-txes [repo]
+  (println "[Digitavlen] Ingesting" (:repo/display-name repo))
   (let [repo (-> repo
                  (assoc :db/id (repo-identifier repo))
                  (assoc :repo/id (repo-identifier repo)))

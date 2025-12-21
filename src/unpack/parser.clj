@@ -28,6 +28,7 @@
   (first (str/split body #"(\n+)?Co-authored-by:")))
 
 (defn ^{:indent 1} ->txes [repo commits]
+  (println "[unpack.parser] Parsing" (:repo/display-name repo))
   (let [people (atom {})
         pers-or-ref (fn [{:keys [:person/email :db/id] :as p}]
                       (if (contains? @people email)
