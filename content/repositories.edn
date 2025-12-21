@@ -3,4 +3,39 @@
   :repo/display-name "Matnyttig"}
  {:repo/owner "mattilsynet"
   :repo/name "matvaretabellen-deux"
-  :repo/display-name "Matvaretabellen Deux"}]
+  :repo/display-name "Matvaretabellen Deux"}
+ {:repo/owner "mattilsynet"
+  :repo/name "clj-minimetry"
+  :repo/display-name "clj-minimetry"}
+ {:repo/owner "mattilsynet"
+  :repo/name "digitavlen"
+  :repo/display-name "Digitavlen"}
+ {:repo/owner "mattilsynet"
+  :repo/name "go-bananas"
+  :repo/display-name "Go bananas"}
+ {:repo/owner "mattilsynet"
+  :repo/name "ops-matnyttig"
+  :repo/display-name "Ops Matnyttig"}
+ {:repo/owner "mattilsynet"
+  :repo/name "slacker-action"
+  :repo/display-name "Slacker action"}
+ {:repo/owner "mattilsynet"
+  :repo/name "spisskammerset"
+  :repo/display-name "Spisskammerset"}
+ {:repo/owner "mattilsynet"
+  :repo/name "madraas"
+  :repo/display-name "Madraas"}
+ {:repo/owner "mattilsynet"
+  :repo/name "parenteser"
+  :repo/display-name "Parenteser"}
+ {:repo/owner "mattilsynet"
+  :repo/name "smilefjes-deux"
+  :repo/display-name "Smilefjes Deux"}
+ {:repo/owner "mattilsynet"
+  :repo/name "m2n"
+  :repo/display-name "m2n"}
+ ;;
+ {:repo/owner "magnars"
+  :repo/name "emacsd-reboot"
+  :repo/display-name ".emacs.d"}
+ ]
