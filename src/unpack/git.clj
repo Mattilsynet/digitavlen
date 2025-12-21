@@ -60,7 +60,6 @@
     (conj (vec commit) git-body numstats)))
 
 (defn get-git-commits! [{:keys [repo-path]}]
-  (println "[unpack.git] Reading history...")
   (let [log (get-git-log! {:repo-path repo-path
                            :separator "%n"
                            :with-numstat true})]
