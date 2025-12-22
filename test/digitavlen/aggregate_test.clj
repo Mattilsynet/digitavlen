@@ -60,10 +60,10 @@
                                        {:commit/authored-date "2025-12-14T08:00:00"}
                                        {:commit/authored-date "2025-12-13T23:59:59"}
                                        {:commit/authored-date "2025-12-13T12:00:00"}])
-           [[(ld/parse "2025-12-13") 3]
+           [[(ld/parse "2025-12-13") 2]
             [(ld/parse "2025-12-14") 3]]))))
 
-(deftest commits-per-day-test
+(deftest commits-per-half-day-test
   (testing "aggregates the commits into count per half day"
     (is (= (aggregate/commits-per-half-day [{:commit/authored-date "2025-12-14T13:00:00"}
                                             {:commit/authored-date "2025-12-14T11:00:00"}
