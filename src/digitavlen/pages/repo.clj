@@ -8,6 +8,15 @@
             [digitavlen.utils :as utils]
             [mattilsynet.design :as mtds]))
 
+(defn get-per-week-year-data [db year repo]
+  (let [weeks-in-year (range 1 (inc (time/number-of-weeks-in-year year)))]
+    (->> (db/commits-in db repo)
+         (filter (partial aggregate/by-year year))
+         aggregate/commits-per-week
+         (utils/add-missing (comp second first)
+           (fn [v] [[year v] 0])
+           weeks-in-year))))
+
 (defn ^{:indent 2} layout [db page & body]
   [:main {:class (mtds/classes :prose :group)}
    [:section {:class (mtds/classes :flex)
@@ -43,27 +52,21 @@
               [:td cnt])]]]]))))
 
 (defn render-year [db page]
-  (let [commits (filter (partial aggregate/by-year (:param/year page))
-                        (db/commits-in db (:git/repo page)))
-        weeks-in-year (range 1 (inc (time/number-of-weeks-in-year (:param/year page))))]
+  (let [data (get-per-week-year-data db (:param/year page) (:git/repo page))]
     (layout db page
-      (let [data (utils/add-missing (comp second first)
-                   (fn [v] [[(:param/year page) v] 0])
-                   weeks-in-year
-                   (aggregate/commits-per-week commits))]
-        [:mtds-chart {:class (mtds/classes :card)
-                      :style {:--mtdsc-chart-aspect "4 / 1"}}
-         [:table
-          [:thead
-           [:tr
-            [:th]
-            (for [[week _] data]
-              [:th (second week)])]]
-          [:tbody
-           [:tr
-            [:th "Commits per week"]
-            (for [[_ cnt] data]
-              [:td cnt])]]]]))))
+      [:mtds-chart {:class (mtds/classes :card)
+                    :style {:--mtdsc-chart-aspect "4 / 1"}}
+       [:table
+        [:thead
+         [:tr
+          [:th]
+          (for [[week _] data]
+            [:th (second week)])]]
+        [:tbody
+         [:tr
+          [:th "Commits per week"]
+          (for [[_ cnt] data]
+            [:td cnt])]]]])))
 
 (defn render-month [db page]
   (let [current-month (ym/of (:param/year page) (:param/month page))
