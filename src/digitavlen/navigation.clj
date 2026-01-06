@@ -35,6 +35,11 @@
         [:label "All time"]
         [:a {:href (str "/" (-> page :git/repo :repo/name))}
          "All time"])
+      (when (< 1 (count years))
+        (if (= :page.kind.repo/compare (:page/kind page))
+          [:label "Compare"]
+          [:a {:href (str "/" (-> page :git/repo :repo/name) "/compare")}
+           "Compare"]))
       (for [year years]
         (if (= (:param/year year)
                (:param/year page))

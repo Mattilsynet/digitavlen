@@ -1,12 +1,22 @@
 (ns digitavlen.pages.repo
   (:require [cljc.java-time.local-date :as ld]
             [cljc.java-time.year-month :as ym]
+            [datomic.api :as d]
             [digitavlen.aggregate :as aggregate]
             [digitavlen.db :as db]
             [digitavlen.navigation :as navigation]
             [digitavlen.time :as time]
             [digitavlen.utils :as utils]
             [mattilsynet.design :as mtds]))
+
+(defn get-per-month-year-data [db year repo]
+  (let [months-in-year (map #(ym/of year %) (range 1 13))]
+    (->> (db/commits-in db repo)
+         (filter (partial aggregate/by-year year))
+         aggregate/commits-per-month
+         (utils/add-missing first
+           (fn [v] [v 0])
+           months-in-year))))
 
 (defn get-per-week-year-data [db year repo]
   (let [weeks-in-year (range 1 (inc (time/number-of-weeks-in-year year)))]
@@ -50,6 +60,31 @@
             [:th "Commits per month"]
             (for [[_ cnt] data]
               [:td cnt])]]]]))))
+
+(defn render-year-compare [db page]
+  (let [years (d/q '[:find [?year ...]
+                     :in $ ?repo-id
+                     :where
+                     [?r :repo/id ?repo-id]
+                     [?p :git/repo ?r]
+                     [?p :param/year ?year]]
+                   db (-> page :git/repo :repo/id))
+        data (map #(get-per-month-year-data db % (:git/repo page)) years)]
+    (layout db page
+      [:mtds-chart {:class (mtds/classes :card)
+                    :style {:--mtdsc-chart-aspect "4 / 1"}}
+       [:table
+        [:thead
+         [:tr
+          [:th]
+          (for [month (range 1 13)]
+            [:th month])]]
+        [:tbody
+         (for [year-data data]
+           [:tr
+            [:th (-> year-data ffirst ym/get-year)]
+            (for [[_ cnt] year-data]
+              [:td cnt])])]]])))
 
 (defn render-year [db page]
   (let [data (get-per-week-year-data db (:param/year page) (:git/repo page))]

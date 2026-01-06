@@ -66,6 +66,9 @@
     (concat [repo
              {:page/uri (str "/" (:repo/name repo))
               :page/kind :page.kind/repo
+              :git/repo (:db/id repo)}
+             {:page/uri (str "/" (:repo/name repo) "/compare")
+              :page/kind :page.kind.repo/compare
               :git/repo (:db/id repo)}]
             (gen-repo-pages repo commit-txes)
             commit-txes)))

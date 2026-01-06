@@ -11,6 +11,7 @@
   (case (:page/kind page)
     :page.kind/frontpage (html (frontpage/render db page))
     :page.kind/repo (html (repo/render db page))
+    :page.kind.repo/compare (html (repo/render-year-compare db page))
     :page.kind.repo/year (html (repo/render-year db page))
     :page.kind.repo/month (html (repo/render-month db page))
     :page.kind.repo/week (html (repo/render-week db page))
