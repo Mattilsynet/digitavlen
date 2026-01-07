@@ -40,16 +40,16 @@
                   week (second (commit/get-yw-authored c))
                   base-path (str "/" (:repo/name repo) "/")]
               (conj units
-                    {:page/uri (str base-path year)
+                    {:page/uri (str base-path year "/")
                      :page/kind :page.kind.repo/year
                      :param/year year
                      :git/repo (:db/id repo)}
-                    {:page/uri (str base-path year "/" month)
+                    {:page/uri (str base-path year "/" month "/")
                      :page/kind :page.kind.repo/month
                      :param/year year
                      :param/month (ym/get-month-value (commit/get-ym-authored c))
                      :git/repo (:db/id repo)}
-                    {:page/uri (str base-path year "/week-" week)
+                    {:page/uri (str base-path year "/week-" week "/")
                      :page/kind :page.kind.repo/week
                      :param/year year
                      :param/week week
@@ -64,10 +64,10 @@
                  (assoc :repo/id (repo-identifier repo)))
         commit-txes (unpack-cached repo)]
     (concat [repo
-             {:page/uri (str "/" (:repo/name repo))
+             {:page/uri (str "/" (:repo/name repo) "/")
               :page/kind :page.kind/repo
               :git/repo (:db/id repo)}
-             {:page/uri (str "/" (:repo/name repo) "/compare")
+             {:page/uri (str "/" (:repo/name repo) "/compare/")
               :page/kind :page.kind.repo/compare
               :git/repo (:db/id repo)}]
             (gen-repo-pages repo commit-txes)

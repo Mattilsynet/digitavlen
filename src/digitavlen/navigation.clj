@@ -33,12 +33,12 @@
      [:div {:class (mtds/classes :flex)}
       (if (= :page.kind/repo (:page/kind page))
         [:label "All time"]
-        [:a {:href (str "/" (-> page :git/repo :repo/name))}
+        [:a {:href (str "/" (-> page :git/repo :repo/name) "/")}
          "All time"])
       (when (< 1 (count years))
         (if (= :page.kind.repo/compare (:page/kind page))
           [:label "Compare"]
-          [:a {:href (str "/" (-> page :git/repo :repo/name) "/compare")}
+          [:a {:href (str "/" (-> page :git/repo :repo/name) "/compare/")}
            "Compare"]))
       (for [year years]
         (if (= (:param/year year)
@@ -50,7 +50,7 @@
      (when months
        [:div {:class (mtds/classes :flex)}
         (when (= :page.kind.repo/month (:page/kind page))
-          [:a {:href (str "/" (-> page :git/repo :repo/name) "/" (:param/year page))}
+          [:a {:href (str "/" (-> page :git/repo :repo/name) "/" (:param/year page) "/")}
            "All year"])
         (for [month (utils/add-missing :param/month (range 1 13) months)]
           (cond
@@ -68,7 +68,7 @@
      (when weeks
        [:div {:class (mtds/classes :flex)}
         (when (= :page.kind.repo/week (:page/kind page))
-          [:a {:href (str "/" (-> page :git/repo :repo/name) "/" (:param/year page))}
+          [:a {:href (str "/" (-> page :git/repo :repo/name) "/" (:param/year page) "/")}
            "All year"])
         (for [week (utils/add-missing :param/week
                      (range 1 (inc (time/number-of-weeks-in-year (:param/year page))))
