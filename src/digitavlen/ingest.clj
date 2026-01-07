@@ -27,11 +27,16 @@
                             read-string)]
     (if cached-data
       cached-data
-      (let [data (unpack/unpack repo repo-url)
-            file (io/file (str "resources/data/" (repo-identifier repo) ".edn"))]
-        (ensure-file-path file)
-        (spit file (pr-str data))
-        data))))
+      (try
+        (let [data (unpack/unpack repo repo-url)
+              file (io/file (str "resources/data/" (repo-identifier repo) ".edn"))]
+          (ensure-file-path file)
+          (spit file (pr-str data))
+          data)
+        (catch Exception e
+          (println (str "[Digitavlen] Failed to unpack " repo-url))
+          (println (str "[Digitavlen] " (.getMessage e)))
+          nil)))))
 
 (defn gen-repo-pages [repo commits]
   (reduce (fn [units c]

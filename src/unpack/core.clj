@@ -25,12 +25,12 @@
 (defn unpack [repo repo-url]
   (let [durations (atom {})]
     (fs/with-temp-dir [temp-dir]
-      (println "[unpack.core] Git cloning" (:repo/display-name repo))
+      (println (str "[unpack.core] Git cloning " (:repo/display-name repo)))
       (timed durations :clone (git/clone! repo-url temp-dir))
       (let [raw-commits (timed durations :read (git/get-git-commits! {:repo-path temp-dir}))
             parsed (timed durations :parse (parser/->txes repo raw-commits))]
         (swap! all-durations assoc (:repo/display-name repo) (time-elapsed @durations))
-        (println "[unpack.core] Finished unpacking" (:repo/display-name repo))
+        (println (str "[unpack.core] Finished unpacking " (:repo/display-name repo)))
         parsed))))
 
 (comment
