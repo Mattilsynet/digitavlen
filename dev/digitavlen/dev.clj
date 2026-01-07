@@ -42,17 +42,14 @@
 
 (comment
 
-  (do
-    (require '[clojure.java.io :as io])
-
-    (defn delete-recursively [filename]
-      (let [f (io/file filename)]
-        (when (.isDirectory f)
-          (doseq [child (.listFiles f)]
-            (delete-recursively child)))
-        (io/delete-file f))))
+  (defn delete-recursively [filename]
+    (let [f (io/file filename)]
+      (when (.isDirectory f)
+        (doseq [child (.listFiles f)]
+          (delete-recursively child)))
+      (io/delete-file f)))
 
   ;; Delete data folder
-  (delete-recursively "resources/data/mattilsynet")
+  (delete-recursively "resources/data/")
 
   )
