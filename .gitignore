@@ -5,3 +5,4 @@
 .nrepl-port
 target/
 resources/data/
+.terraform/
