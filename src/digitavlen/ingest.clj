@@ -81,12 +81,17 @@
             (gen-repo-pages repo commit-txes)
             commit-txes)))
 
+(defn println-tap [s x]
+  (println s)
+  x)
+
 (defn create-tx [filename txes]
   (cond-> txes
     (= filename "repositories.edn")
     (->> (pmap create-repository-txes)
          (mapcat identity)
-         doall)))
+         doall
+         (println-tap (str "[Digitavlen] Done ingesting " (count txes) " repositories 😋")))))
 
 (comment
 
