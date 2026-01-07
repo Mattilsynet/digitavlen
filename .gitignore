@@ -6,3 +6,4 @@
 target/
 resources/data/
 .terraform/
+docker/build/
