@@ -43,6 +43,16 @@ jobs:
     needs:
       - configure
     steps:
+      - name: Notify testing
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_NOTIFICATION_TOKEN }}
+        uses: Mattilsynet/slacker-action@main
+        with:
+          channel-id: C06192XRMNW
+          message-id: ${{ needs.configure.outputs.slack-message }}
+          text: ":female-scientist: Tester kvaliteten på krittet …"
+          bot-icon: "${{ env.BOT_ICON }}"
+          bot-name: "${{ env.BOT_NAME }}"
       - uses: actions/checkout@v5
       - name: Set up JDK
         uses: actions/setup-java@v4
@@ -62,16 +72,6 @@ jobs:
           key: ${{ runner.os }}-clojure-test-${{ hashFiles('deps.edn') }}
           restore-keys: |
             ${{ runner.os }}-clojure-test
-      - name: Notify testing
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_NOTIFICATION_TOKEN }}
-        uses: Mattilsynet/slacker-action@main
-        with:
-          channel-id: C06192XRMNW
-          message-id: ${{ needs.configure.outputs.slack-message }}
-          text: ":female-scientist: Tester kvaliteten på krittet …"
-          bot-icon: "${{ env.BOT_ICON }}"
-          bot-name: "${{ env.BOT_NAME }}"
       - name: Test
         run: bin/kaocha
 
@@ -148,16 +148,6 @@ jobs:
       - build
     name: Deployer vha Cloud Run
     steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-      - id: auth
-        name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v2
-        with:
-          token_format: access_token
-          create_credentials_file: true
-          workload_identity_provider: projects/793610620698/locations/global/workloadIdentityPools/gh-actions/providers/github
-          service_account: cloudrun-wi-sa-github-actions@digitavlen-7599.iam.gserviceaccount.com
       - name: Notify publish
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_NOTIFICATION_TOKEN }}
@@ -168,6 +158,16 @@ jobs:
           text: ":abacus: Beregner og vurderer …"
           bot-icon: "${{ env.BOT_ICON }}"
           bot-name: "${{ env.BOT_NAME }}"
+      - name: Checkout
+        uses: actions/checkout@v5
+      - id: auth
+        name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          token_format: access_token
+          create_credentials_file: true
+          workload_identity_provider: projects/793610620698/locations/global/workloadIdentityPools/gh-actions/providers/github
+          service_account: cloudrun-wi-sa-github-actions@digitavlen-7599.iam.gserviceaccount.com
       - name: Deploying
         uses: google-github-actions/deploy-cloudrun@v3
         with:
