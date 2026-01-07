@@ -19,8 +19,11 @@
 
 (def config
   {:site/title "Digitavlen"
+
+   :powerpack/build-dir "docker/build"
    :powerpack/render-page #'render-page
    :powerpack/create-ingest-tx #'ingest/create-tx
+
    :optimus/bundles {"styles.css" {:public-dir "public"
                                    :paths ["/mtds/styles.css"]}
                      "app.js" {:public-dir "public"
