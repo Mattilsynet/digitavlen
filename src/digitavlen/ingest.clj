@@ -18,25 +18,28 @@
 (defn ensure-file-path [file]
   (-> file .getParentFile .mkdirs))
 
+(defn unpack-repo [repo]
+  (try
+    (let [repo-url (if runtime/*dev?*
+                     (github-ssh-url repo)
+                     (github-url repo))
+          data (unpack/unpack repo repo-url)
+          file (io/file (str "resources/data/" (repo-identifier repo) ".edn"))]
+      (ensure-file-path file)
+      (spit file (pr-str data))
+      data)
+    (catch Exception e
+      (println (str "[Digitavlen] Failed to unpack " (repo-identifier repo)))
+      (println (str "[Digitavlen] " (.getMessage e)))
+      nil)))
+
 (defn unpack-cached [repo]
-  (let [repo-url (if runtime/*dev?*
-                  (github-ssh-url repo)
-                  (github-url repo))
-        cached-data (some-> (io/resource (str "data/" (repo-identifier repo) ".edn"))
+  (let [cached-data (some-> (io/resource (str "data/" (repo-identifier repo) ".edn"))
                             slurp
                             read-string)]
     (if cached-data
       cached-data
-      (try
-        (let [data (unpack/unpack repo repo-url)
-              file (io/file (str "resources/data/" (repo-identifier repo) ".edn"))]
-          (ensure-file-path file)
-          (spit file (pr-str data))
-          data)
-        (catch Exception e
-          (println (str "[Digitavlen] Failed to unpack " repo-url))
-          (println (str "[Digitavlen] " (.getMessage e)))
-          nil)))))
+      (unpack-repo repo))))
 
 (defn gen-repo-pages [repo commits]
   (reduce (fn [units c]

@@ -1,5 +1,7 @@
 (ns digitavlen.dev
-  (:require [digitavlen.core :as tavlen]
+  (:require [clojure.java.io :as io]
+            [digitavlen.core :as tavlen]
+            [digitavlen.ingest :as ingest]
             [digitavlen.runtime :as runtime]
             [powerpack.dev :as dev]))
 
@@ -7,6 +9,11 @@
 
 (defmethod dev/configure! :default []
   tavlen/config)
+
+(defn update-repos []
+  (let [repos (read-string (slurp (io/file "content/repositories.edn")))]
+    (doall (pmap ingest/unpack-repo repos))
+    (println (str "Done updating " (count repos) " repos!"))))
 
 (comment ;; s-:
 
@@ -17,6 +24,8 @@
   (dev/reset)
 
   (dev/get-app)
+
+  (update-repos)
 
   )
 
