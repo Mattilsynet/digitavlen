@@ -63,6 +63,7 @@
   (let [log (get-git-log! {:repo-path repo-path
                            :separator "%n"
                            :with-numstat true})]
+    (println "GITLOGOUTPUT\n" log)
     (->> (str/split log #"\n")
          (reduce partitionize [])
          (mapv process-commit))))
