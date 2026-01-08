@@ -34,7 +34,7 @@
 (defn get-git-log! [opts]
   (let [{:keys [repo-path with-numstat separator pretty-format]} (merge default-options opts)
         cmd (build-git-log-command repo-path with-numstat separator pretty-format)]
-    (:out (p/check (apply p/sh cmd)))))
+    (:out (apply p/sh cmd))))
 
 (defn matches-git-hash [s]
   (re-matches #"^[a-f0-9]{40}.*" s))
