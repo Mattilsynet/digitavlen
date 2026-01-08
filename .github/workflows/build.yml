@@ -109,9 +109,9 @@ jobs:
           key: ${{ runner.os }}-clojure-build-${{ hashFiles('deps.edn') }}
           restore-keys: |
             ${{ runner.os }}-clojure-build
-#      - name: Configure git with PAT for MT-repos
-#        run: |
-#          git config --global url.'https://${{ secrets.PAT_ALL_MT_REPOSITORIES }}@github.com/mattilsynet/'.insteadOf 'https://github.com/mattilsynet/'
+      - name: Configure git with PAT for MT-repos
+        run: |
+          git config --global url.'https://${{ secrets.PAT_ALL_MT_REPOSITORIES }}@github.com/mattilsynet/'.insteadOf 'https://github.com/mattilsynet/'
       - name: Build docker image
         run: make docker
       - id: auth
