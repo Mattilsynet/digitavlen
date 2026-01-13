@@ -18,10 +18,9 @@
            (fn [v] [v 0])
            months-in-year))))
 
-(defn get-per-week-year-data [db year repo]
+(defn get-per-week-year-data [year commits]
   (let [weeks-in-year (range 1 (inc (time/number-of-weeks-in-year year)))]
-    (->> (db/commits-in db repo)
-         (filter (partial aggregate/by-year year))
+    (->> commits
          aggregate/commits-per-week
          (utils/add-missing (comp second first)
            (fn [v] [[year v] 0])
@@ -86,8 +85,10 @@
             (for [[_ cnt] year-data]
               [:td cnt])])]]])))
 
-(defn render-year [db page]
-  (let [data (get-per-week-year-data db (:param/year page) (:git/repo page))]
+(defn render-year [db {:keys [git/repo param/year] :as page}]
+  (let [commits (->> (db/commits-in db repo)
+                     (filter (partial aggregate/by-year year)))
+        data (get-per-week-year-data year commits)]
     (layout db page
       [:mtds-chart {:class (mtds/classes :card)
                     :style {:--mtdsc-chart-aspect "4 / 1"}}
