@@ -3,6 +3,8 @@
             [cljc.java-time.year-month :as ym]
             [datomic.api :as d]
             [digitavlen.aggregate :as aggregate]
+            [digitavlen.author :as author]
+            [digitavlen.charts.author :as author-charts]
             [digitavlen.db :as db]
             [digitavlen.navigation :as navigation]
             [digitavlen.time :as time]
@@ -38,8 +40,8 @@
    body])
 
 (defn render [db page]
-  (let [commits-per-month (->> (db/commits-in db (:git/repo page))
-                               aggregate/commits-per-month)]
+  (let [commits (db/commits-in db (:git/repo page))
+        commits-per-month (aggregate/commits-per-month commits)]
     (layout db page
       (let [data (utils/add-missing first
                    (fn [v] [v 0])
@@ -58,7 +60,11 @@
            [:tr
             [:th "Commits per month"]
             (for [[_ cnt] data]
-              [:td cnt])]]]]))))
+              [:td cnt])]]]])
+
+      (author-charts/collaborators (author/author-pairs
+                                    (db/get-repo-authors db (:git/repo page)))
+                                   commits))))
 
 (defn render-year-compare [db page]
   (let [years (d/q '[:find [?year ...]
@@ -102,7 +108,11 @@
          [:tr
           [:th "Commits per week"]
           (for [[_ cnt] data]
-            [:td cnt])]]]])))
+            [:td cnt])]]]]
+
+      (author-charts/collaborators (author/author-pairs
+                                    (db/get-repo-authors db repo))
+                                   commits))))
 
 (defn render-month [db page]
   (let [current-month (ym/of (:param/year page) (:param/month page))
@@ -128,7 +138,11 @@
            [:tr
             [:th "Commits per day"]
             (for [[_ cnt] data]
-              [:td cnt])]]]]))))
+              [:td cnt])]]]])
+
+      (author-charts/collaborators (author/author-pairs
+                                    (db/get-repo-authors db (:git/repo page)))
+                                   commits))))
 
 (defn render-week [db page]
   (let [commits (filter (partial aggregate/by-week
@@ -161,7 +175,11 @@
            [:tr
             [:th "Commits per afternoon"]
             (for [[_ cnt] data]
-              [:td (-> cnt second second)])]]]]))))
+              [:td (-> cnt second second)])]]]])
+
+      (author-charts/collaborators (author/author-pairs
+                                    (db/get-repo-authors db (:git/repo page)))
+                                   commits))))
 
 (comment
 
