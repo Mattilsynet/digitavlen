@@ -1,5 +1,7 @@
 (ns digitavlen.frontpage
   (:require [datomic.api :as d]
+            [digitavlen.author :as author]
+            [digitavlen.charts.author :as author-charts]
             [digitavlen.db :as db]
             [mattilsynet.design :as mtds]))
 
@@ -13,6 +15,8 @@
                          db)
                     (db/entities db)
                     (sort-by :page/uri))]
-      [:div
-       [:a {:href (:page/uri repo)}
-        (:repo/display-name (:git/repo repo))]])]])
+      [:a {:href (:page/uri repo)}
+       (:repo/display-name (:git/repo repo))])]
+
+   (author-charts/collaborators (author/author-pairs (db/get-authors db))
+                                (db/get-commits db))])

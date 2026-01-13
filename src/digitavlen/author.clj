@@ -13,6 +13,12 @@
         :when (< (compare (:person/name a) (:person/name b)) 0)]
     #{a b}))
 
+(defn pair->label [pair]
+  (->> pair
+       (sort-by :person/name)
+       (map (comp ->initials :person/name))
+       (str/join "+")))
+
 (defn inc-collaborations [collaborations commit]
   (let [pairs (author-pairs (conj (:commit/co-authors commit)
                                   (:commit/author commit)))]
