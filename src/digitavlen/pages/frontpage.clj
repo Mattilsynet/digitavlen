@@ -1,4 +1,4 @@
-(ns digitavlen.frontpage
+(ns digitavlen.pages.frontpage
   (:require [datomic.api :as d]
             [digitavlen.author :as author]
             [digitavlen.charts.author :as author-charts]

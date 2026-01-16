@@ -1,6 +1,6 @@
 (ns digitavlen.core
-  (:require [digitavlen.frontpage :as frontpage]
-            [digitavlen.ingest :as ingest]
+  (:require [digitavlen.ingest :as ingest]
+            [digitavlen.pages.frontpage :as frontpage]
             [digitavlen.pages.repo :as repo]))
 
 (defn html [body]
